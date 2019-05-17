@@ -88,12 +88,24 @@ namespace ChatroomClient
                 switch (package.protocol)
                 {
                     case (uint)Protocol.SECRET:
+                        Message secret = new Message();
+                        clsSecret clsecret = new clsSecret();
+                        clsecret = clsecret.FromBytes(package.data);
+                        writeline("[" + clsecret.message.hour + "：" + clsecret.message.min + "] " + clsecret.message.user.name + "：\n"
+                            + clsecret.message.message + "\n");
                         break;
                     case (uint)Protocol.SEND:
                         Message message = new Message(NetManager.me, "");
                         clsSend clsSend = new clsSend(message);
                         clsSend = clsSend.FromBytes(package.data);
-                        writeline(clsSend.message.user.name + "：\n" + clsSend.message.message+ "\n");
+                        writeline("[" + clsSend.message.hour + "：" + clsSend.message.min + "] " + clsSend.message.user.name + "：\n"
+                            + clsSend.message.message + "\n");
+                        break;
+                    case (uint)Protocol.ADDUSER:
+                        userList 
+                        break;
+                    case (uint)Protocol.KILLUSER:
+
                         break;
                 }
             }

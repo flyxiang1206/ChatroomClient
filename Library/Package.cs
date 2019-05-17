@@ -12,6 +12,7 @@ namespace ChatroomClient
         public byte[] data { get; set; }
 
         public NetConnection user { get; set; }
+        public List<NetConnection> users = new List<NetConnection>();
 
         public Package() { }
 
