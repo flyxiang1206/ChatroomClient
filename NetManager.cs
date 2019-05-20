@@ -14,5 +14,7 @@ namespace ChatroomClient
         public static Queue<Package> toClient = new Queue<Package>();
 
         public static User me { get; set; }
+
+        public static Dictionary<uint, User> onlineUser = new Dictionary<uint, User>();
     }
 }

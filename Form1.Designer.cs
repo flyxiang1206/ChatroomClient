@@ -133,6 +133,7 @@
             this.btnSecret.TabIndex = 7;
             this.btnSecret.Text = "Send To Select User";
             this.btnSecret.UseVisualStyleBackColor = true;
+            this.btnSecret.Click += new System.EventHandler(this.btnSecret_Click);
             // 
             // lookConnection
             // 

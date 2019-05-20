@@ -91,7 +91,24 @@ namespace ChatroomClient
                         Message secret = new Message();
                         clsSecret clsecret = new clsSecret();
                         clsecret = clsecret.FromBytes(package.data);
-                        writeline("[" + clsecret.message.hour + "：" + clsecret.message.min + "] " + clsecret.message.user.name + "：\n"
+                        User fromUser = new User();
+
+                        if (clsecret.forUid != NetManager.me.uid)
+                        {
+                            foreach (User getUser in NetManager.onlineUser.Values)
+                            {
+                                if (getUser.uid == clsecret.forUid)
+                                {
+                                    fromUser = getUser;
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                            fromUser = NetManager.me;
+
+                        writeline("[" + clsecret.message.hour + "：" + clsecret.message.min + "] "
+                            + clsecret.message.user.name + " send DM to "+fromUser.name + "：\n"
                             + clsecret.message.message + "\n");
                         break;
                     case (uint)Protocol.SEND:
@@ -102,10 +119,24 @@ namespace ChatroomClient
                             + clsSend.message.message + "\n");
                         break;
                     case (uint)Protocol.ADDUSER:
-                        userList 
+                        clsChangeUser addUser = new clsChangeUser(0, "");
+                        addUser = addUser.FromBytes(package.data);
+                        User user = new User() { uid = addUser.uid, name = addUser.userName };
+                        if (!NetManager.onlineUser.ContainsKey(user.uid) && user.uid != NetManager.me.uid)
+                        {
+                            NetManager.onlineUser.Add(user.uid, user);
+                            userList.Items.Add(user.name);
+                        }
                         break;
                     case (uint)Protocol.KILLUSER:
-
+                        clsChangeUser killUser = new clsChangeUser(0, "");
+                        addUser = killUser.FromBytes(package.data);
+                        User kUser = new User() { uid = addUser.uid, name = addUser.userName };
+                        if (NetManager.onlineUser.ContainsKey(kUser.uid))
+                        {
+                            NetManager.onlineUser.Remove(kUser.uid);
+                            userList.Items.Remove(kUser.name);
+                        }
                         break;
                 }
             }
@@ -116,6 +147,28 @@ namespace ChatroomClient
             Message message = new Message(NetManager.me, sendText.Text.ToString());
             clsSend clsSend = new clsSend(message);
             Package package = new Package((uint)Protocol.SEND, clsSend.ToBytes());
+            NetManager.toServer.Enqueue(package);
+            sendText.Text = "";
+        }
+
+        private void btnSecret_Click(object sender, EventArgs e)
+        {
+            string forName = userList.Text;
+            User forUser = new User();
+
+            foreach (User user in NetManager.onlineUser.Values)
+            {
+                if(user.name == forName)
+                {
+                    forUser = user;
+                    break;
+                }
+            }
+
+            Message message = new Message(NetManager.me, sendText.Text.ToString());
+
+            clsSecret clsSecret = new clsSecret(message,forUser.uid);
+            Package package = new Package((uint)Protocol.SECRET, clsSecret.ToBytes());
             NetManager.toServer.Enqueue(package);
             sendText.Text = "";
         }
