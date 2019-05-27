@@ -88,7 +88,6 @@ namespace ChatroomClient
                 switch (package.protocol)
                 {
                     case (uint)Protocol.SECRET:
-                        Message secret = new Message();
                         clsSecret clsecret = new clsSecret();
                         clsecret = clsecret.FromBytes(package.data);
                         User fromUser = new User();
@@ -112,8 +111,7 @@ namespace ChatroomClient
                             + clsecret.message.message + "\n");
                         break;
                     case (uint)Protocol.SEND:
-                        Message message = new Message(NetManager.me, "");
-                        clsSend clsSend = new clsSend(message);
+                        clsSend clsSend = new clsSend();
                         clsSend = clsSend.FromBytes(package.data);
                         writeline("[" + clsSend.message.hour + "：" + clsSend.message.min + "] " + clsSend.message.user.name + "：\n"
                             + clsSend.message.message + "\n");
@@ -171,6 +169,12 @@ namespace ChatroomClient
             Package package = new Package((uint)Protocol.SECRET, clsSecret.ToBytes());
             NetManager.toServer.Enqueue(package);
             sendText.Text = "";
+        }
+
+        private void rtMessage_TextChanged(object sender, EventArgs e)
+        {
+            message.SelectionStart = message.TextLength;
+            message.ScrollToCaret();
         }
     }
 }

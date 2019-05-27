@@ -51,6 +51,7 @@
             this.rtMessage.Size = new System.Drawing.Size(390, 334);
             this.rtMessage.TabIndex = 0;
             this.rtMessage.Text = "";
+            this.rtMessage.TextChanged += new System.EventHandler(this.rtMessage_TextChanged);
             // 
             // txtMessage
             // 
