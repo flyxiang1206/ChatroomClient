@@ -10,6 +10,8 @@ This project requires the corresponding Server project to function properly.
 
 [The Server project Link](https://github.com/flyxiang1206/ChatroomServer)
 
+You can get the execution file at [here](https://ppt.cc/fpsERx).
+
 ## Functions
 
 ### Send Message
